@@ -40,16 +40,16 @@ $("#webcam").bind("loadedmetadata", function () {
 $("#detection-switch").change(function () {
   if(this.checked){
     toggleContrl("box-switch", true);
-    //toggleContrl("landmarks-switch", true);
-    //toggleContrl("expression-switch", true);
-    //toggleContrl("age-gender-switch", true);
+    toggleContrl("landmarks-switch", true);
+    toggleContrl("expression-switch", true);
+    toggleContrl("age-gender-switch", true);
     $("#box-switch").prop('checked', true);
     $(".loading").removeClass('d-none');
     Promise.all([
       faceapi.nets.tinyFaceDetector.load(modelPath),
-      //faceapi.nets.faceLandmark68TinyNet.load(modelPath),
-      //faceapi.nets.faceExpressionNet.load(modelPath),
-      //faceapi.nets.ageGenderNet.load(modelPath)
+      faceapi.nets.faceLandmark68TinyNet.load(modelPath),
+      faceapi.nets.faceExpressionNet.load(modelPath),
+      faceapi.nets.ageGenderNet.load(modelPath)
     ]).then(function(){
       createCanvas();
       startDetection();
@@ -58,9 +58,9 @@ $("#detection-switch").change(function () {
   else {
     clearInterval(faceDetection);
     toggleContrl("box-switch", false);
-    //toggleContrl("landmarks-switch", false);
-    //toggleContrl("expression-switch", false);
-    //toggleContrl("age-gender-switch", false);
+    toggleContrl("landmarks-switch", false);
+    toggleContrl("expression-switch", false);
+    toggleContrl("age-gender-switch", false);
     if(typeof canvas !== "undefined"){
       setTimeout(function() {
         canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
@@ -97,9 +97,9 @@ function startDetection(){
     if($("#box-switch").is(":checked")){
       faceapi.draw.drawDetections(canvas, resizedDetections)
     }
-    //if($("#landmarks-switch").is(":checked")){
-    //  faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
-    //}
+    if($("#landmarks-switch").is(":checked")){
+      faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+    }
     if($("#expression-switch").is(":checked")){
       faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
     }
